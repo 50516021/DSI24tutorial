@@ -23,12 +23,6 @@
 
 close all;
 
-%% basic parameters
-
-% for OSC %
-% ip = '192.168.0.107'; %ip adress for iPad
-ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
-
 %% new or continue
 ExpSt = ["New Experiment" "Continuation"]; %experiment status
 prompt = 'New or Continued?'; %prompt message
@@ -80,6 +74,10 @@ opts = detectImportOptions(answerfile_path); %answer sheet
 opts.Delimiter = {','}; %separation optoion
 corTable = readtable(answerfile_path,opts); %load answer reference file
 corTable = table2array(corTable(:,1:2)); %reference of responce and answer
+
+% for OSC %
+% ip = '192.168.0.107'; %ip adress for iPad
+ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
 
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side

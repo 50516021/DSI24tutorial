@@ -1,5 +1,5 @@
 
-%  SpAt_main_prac % 
+%  SpAt_prac % 
 % - practice version of the CRM test
 %
 % #required Add-ons
@@ -91,36 +91,36 @@ disp('finish making soundlist')
 
 %% OSC preparing - clear all message
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentReset = utils.oscread(indicator, {''});
+commentReset = utils.oscwrite(indicator, {''});
 step(Hs, commentReset);
 
-conditionReset = utils.oscread(condition, {''});
+conditionReset = utils.oscwrite(condition, {''});
 step(Hs, conditionReset);
 
-trialReset = utils.oscread(trial_indicator, {''});
+trialReset = utils.oscwrite(trial_indicator, {''});
 step(Hs, trialReset);
 
-totalReset = utils.oscread(total_indicator, {''});
+totalReset = utils.oscwrite(total_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = utils.oscread(first_indicator, {''});
+totalReset = utils.oscwrite(first_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = utils.oscread(second_indicator, {''});
+totalReset = utils.oscwrite(second_indicator, {''});
 step(Hs, totalReset);
 
 ledstatus = {0}; % turn off the LED
-ledOn = utils.oscread(led, ledstatus);
+ledOn = utils.oscwrite(led, ledstatus);
 step(Hs, ledOn);
 
-ledOn = utils.oscread(led2, ledstatus);
+ledOn = utils.oscwrite(led2, ledstatus);
 step(Hs, ledOn);
 
 release(Hs)
 
 %% experiment
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentSet = utils.oscread(indicator, {'Press any key to start'});
+commentSet = utils.oscwrite(indicator, {'Press any key to start'});
 step(Hs, commentSet);
 release(Hs)
 
