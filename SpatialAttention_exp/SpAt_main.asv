@@ -19,10 +19,10 @@
 % #latest updates
 % 20240503 minor changes from Japanese exps
 
-
-
-
 close all;
+
+%% basic parameters
+
 
 %% new or continue
 ExpSt = ["New Experiment" "Continuation"]; %experiment status

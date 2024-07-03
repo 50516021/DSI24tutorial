@@ -6,23 +6,28 @@
 % 
 % 
 % #required functions
-% - makestimuluslist.m
+% - data/
+% -- makestimuluslist.m
 %   stimulus list maker (all stimulus info included)
-% - makestimulus.m
+% -- makestimulus.m
 %   stimulus maker for v4
-% - data/oscread.m
+% - utils/
+% -- oscread.m
 %
-% - utils.oscwrite.m
+% -- oscwrite.m
 % 
 % #required setting files
 % 
 % #latest updates
 % 20240503 minor changes from Japanese exps
 
-
-
-
 close all;
+
+%% basic parameters
+
+% for OSC %
+% ip = '192.168.0.107'; %ip adress for iPad
+ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
 
 %% new or continue
 ExpSt = ["New Experiment" "Continuation"]; %experiment status
@@ -70,15 +75,11 @@ end
 
 %% variables
 
-opts = detectImportOptions('answer.csv'); %answer sheet
+answerfile_path = 'test/answer.csv';
+opts = detectImportOptions(answerfile_path); %answer sheet
 opts.Delimiter = {','}; %separation optoion
-corTable = readtable('answer.csv',opts); %load answer reference file
+corTable = readtable(answerfile_path,opts); %load answer reference file
 corTable = table2array(corTable(:,1:2)); %reference of responce and answer
-
-% for OSC %
-% ip = '192.168.0.107'; %ip adress for iPad
-ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
-% ip = '169.254.153.246'; %Akira's iPad
 
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side
@@ -92,15 +93,12 @@ second_indicator = '/label/2nd';
 led = '/led';
 led2 = '/led2';
 
-% for EEG (only for Biosemi and DSI-24 from v6) %
+%%% for EEG (only for Biosemi and DSI-24 from v6) %%%
 devOpt = ["Biosemi" "DSI-24"]; % EEG device option
-% prompt = 'Choose EEG device'; % prompt message
-% [dev,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[150 100],'ListString',devOpt); % option selection window
 dev = 2; %only DSI-24 for Japanese version
 devicename = devOpt(dev); % set device name
 durTrigger = .03; %trigger duration for DSI-24
 durInterval = .05; %trigger interval duration for DSI-24
-% durAdjust = (2-dev)*(.03+.05)*5; %trigger ind interval time adjustment
 baudrate = [115200 9600]; %baud rate for trigger (Biosemi: 115200, DSI-24: 9600)
 
 % starttime = 6; %entire sound starttime (in case fixed)
@@ -393,7 +391,7 @@ try
             disp(MesBrk) % status message
 
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = oscwrite(indicator, {'Take a rest. Press any key to continue'});
+            commentSet = utils.oscread(indicator, {'Take a rest. Press any key to continue'});
             step(Hs, commentSet);
             release(Hs);
             
@@ -415,7 +413,7 @@ try
             release(Hr);
             
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = oscwrite(indicator, {''});
+            commentSet = utils.oscread(indicator, {''});
             step(Hs, commentSet);
             release(Hs)
             
@@ -432,13 +430,13 @@ try
     delete(obj.sp);
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = oscwrite(indicator, {'Finished. Thank you!'});
+    commentSet = utils.oscread(indicator, {'Finished. Thank you!'});
     step(Hs, commentSet);
     release(Hs)
     
 catch
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = oscwrite(indicator, {'ERROR'});
+    commentSet = utils.oscread(indicator, {'ERROR'});
     step(Hs, commentSet);
     release(Hs)
 

@@ -9,7 +9,7 @@
 %%% - 
 
 %%% v1
-%%% function script for ver 4 stimulus
+%%% function script for stimulus
 
 
 
@@ -62,7 +62,7 @@ function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, n
     wavTgt(onsetNumber*fs + 1:onsetNumber*fs + length(wavNumber)) = wavNumber;
 
     wavTgt = fadein(d_fifo,wavTgt,fs);  wavTgt = fadeout(d_fifo,wavTgt,fs);
-    [wavMsk,mfs] = audioread('maskers/testmasker0528.wav'); % read masker file
+    [wavMsk,mfs] = audioread([path_masker, 'masker_spch_orch.wav']); % read masker file
 
     %%% resample 
     [P,Q] = rat(fs/tfs);   wavTgt = resample(wavTgt, P, Q);

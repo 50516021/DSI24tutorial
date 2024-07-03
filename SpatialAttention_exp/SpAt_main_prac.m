@@ -8,15 +8,16 @@
 % #required Add-ons
 % - Psychportaudio
 % 
-% 
 % #required functions
-% - makestimuluslist_SNR_EEGv4.m
+% - data/
+% -- makestimuluslist.m
 %   stimulus list maker (all stimulus info included)
-% - makestimulus.m
+% -- makestimulus.m
 %   stimulus maker for v4
-% - oscread.m
+% - utils/
+% -- oscread.m
 %
-% - oscwrite.m
+% -- oscwrite.m
 % 
 % #required setting files
 % 
@@ -72,7 +73,7 @@ filename = ['Subj_' subj '_' timestamp];
 
 %% make stimulus table
 disp('making stimuli list')
-table = makestimuluslist_SNR_EEGv4_prac(filename);
+table = data.makestimuluslist(filename);
 
 table2 = table;
 save('restemp.mat','table2');
@@ -90,36 +91,36 @@ disp('finish making soundlist')
 
 %% OSC preparing - clear all message
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentReset = oscwrite(indicator, {''});
+commentReset = utils.oscread(indicator, {''});
 step(Hs, commentReset);
 
-conditionReset = oscwrite(condition, {''});
+conditionReset = utils.oscread(condition, {''});
 step(Hs, conditionReset);
 
-trialReset = oscwrite(trial_indicator, {''});
+trialReset = utils.oscread(trial_indicator, {''});
 step(Hs, trialReset);
 
-totalReset = oscwrite(total_indicator, {''});
+totalReset = utils.oscread(total_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = oscwrite(first_indicator, {''});
+totalReset = utils.oscread(first_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = oscwrite(second_indicator, {''});
+totalReset = utils.oscread(second_indicator, {''});
 step(Hs, totalReset);
 
 ledstatus = {0}; % turn off the LED
-ledOn = oscwrite(led, ledstatus);
+ledOn = utils.oscread(led, ledstatus);
 step(Hs, ledOn);
 
-ledOn = oscwrite(led2, ledstatus);
+ledOn = utils.oscread(led2, ledstatus);
 step(Hs, ledOn);
 
 release(Hs)
 
 %% experiment
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentSet = oscwrite(indicator, {'Press any key to start'});
+commentSet = utils.oscread(indicator, {'Press any key to start'});
 step(Hs, commentSet);
 release(Hs)
 
@@ -131,7 +132,7 @@ outRest = 0;
 while outRest == 0
     dR=step(Hr);
     if isempty(dR)==0
-        [tag, data]=oscread(dR);
+        [tag, data]=utils.oscread(dR);
         % disp([tag num2str(data')]);
         break
     end
@@ -149,18 +150,18 @@ responce = cell(numTrial,4);
 
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
         trialnumber = {i};
-        trialSet = oscwrite(trial_indicator, trialnumber);
+        trialSet = utils.oscread(trial_indicator, trialnumber);
         step(Hs, trialSet);
         
         total = {sprintf('/ %d',numTrial)};
-        totalSet = oscwrite(total_indicator, total);
+        totalSet = utils.oscread(total_indicator, total);
         step(Hs, totalSet);
         
         % indicate current task
-        commentSet = oscwrite(indicator, {'Pay attention to the voice from "Ready"'});
+        commentSet = utils.oscread(indicator, {'Pay attention to the voice from "Ready"'});
         step(Hs, commentSet);
 
-        conditionSet = oscwrite(condition, {'Single'});
+        conditionSet = utils.oscread(condition, {'Single'});
         step(Hs, conditionSet);            
         
         release(Hs);
@@ -169,7 +170,7 @@ responce = cell(numTrial,4);
         
         % Prepare sound
         restime = tic;
-        [stimulus, duration] = makestimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
+        [stimulus, duration] = data.makestimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
         
         PsychPortAudio('Volume', pahandle, volume); %adjust volume
         PsychPortAudio('FillBuffer', pahandle, stimulus');   % load stimulus
@@ -186,13 +187,13 @@ responce = cell(numTrial,4);
 
         ledstatus = {1}; % turn on the LED
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = oscwrite(led, ledstatus);
+        ledOn = utils.oscread(led, ledstatus);
         step(Hs, ledOn);
         release(Hs);
         
         % indicater
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        commentSet = oscwrite(indicator, {'Answer "Color" and "Number"'});
+        commentSet = utils.oscread(indicator, {'Answer "Color" and "Number"'});
         step(Hs, commentSet);
         release(Hs);
         
@@ -208,7 +209,7 @@ responce = cell(numTrial,4);
         while (stat==true)
             dR=step(Hr);
             if isempty(dR)==0
-                [tag, data]=oscread(dR);
+                [tag, data]=utils.oscread(dR);
                 %                 disp([tag num2str(data')]);
                 break
             end
@@ -219,9 +220,9 @@ responce = cell(numTrial,4);
 
         if stat == false
             tag = 'NA';
-            commentSet = oscwrite(indicator, {'TIME UP'});
+            commentSet = utils.oscread(indicator, {'TIME UP'});
         else
-            commentSet = oscwrite(indicator, {'Sent'});            
+            commentSet = utils.oscread(indicator, {'Sent'});            
         end
         
         step(Hs, commentSet);
@@ -237,7 +238,7 @@ responce = cell(numTrial,4);
         
         ledstatus = {0}; % turn off the LED
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = oscwrite(led, ledstatus);
+        ledOn = utils.oscread(led, ledstatus);
         step(Hs, ledOn);
         release(Hs);
         
@@ -246,7 +247,7 @@ responce = cell(numTrial,4);
             disp('taking a break...')
 
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = oscwrite(indicator, {'Take a rest. Press any key to continue'});
+            commentSet = utils.oscread(indicator, {'Take a rest. Press any key to continue'});
             step(Hs, commentSet);
             release(Hs);
             
@@ -260,7 +261,7 @@ responce = cell(numTrial,4);
             while outRest == 0
                 dR=step(Hr);
                 if isempty(dR)==0
-                    [tag, data]=oscread(dR);
+                    [tag, data]=utils.oscread(dR);
                     % disp([tag num2str(data')]);
                     break
                 end
@@ -268,7 +269,7 @@ responce = cell(numTrial,4);
             release(Hr);
             
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = oscwrite(indicator, {''});
+            commentSet = utils.oscread(indicator, {''});
             step(Hs, commentSet);
             release(Hs)
             
@@ -279,13 +280,13 @@ responce = cell(numTrial,4);
     end
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = oscwrite(indicator, {'Finish'});
+    commentSet = utils.oscread(indicator, {'Finish'});
     step(Hs, commentSet);
     release(Hs)
 %     
 % catch
 %     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-%     commentSet = oscwrite(indicator, {'ERROR'});
+%     commentSet = utils.oscread(indicator, {'ERROR'});
 %     step(Hs, commentSet);
 %     release(Hs)
 %     
