@@ -36,8 +36,8 @@ function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, n
     onsetNumber = 2.10; %onset of number (s)
     Cols = ["blue", "red", "white", "green"]; %color options
 
-    path_target = '../stimuli/target/';
-    path_masker = '../stimuli/masker/';
+    path_target = './stimuli/target/english/';
+    path_masker = './stimuli/masker/';
 
 %% name preparation
     names = split(target,'',1);
@@ -61,7 +61,7 @@ function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, n
     wavTgt(onsetColor*fs + 1:onsetColor*fs + length(wavColor)) = wavColor;
     wavTgt(onsetNumber*fs + 1:onsetNumber*fs + length(wavNumber)) = wavNumber;
 
-    wavTgt = fadein(d_fifo,wavTgt,fs);  wavTgt = fadeout(d_fifo,wavTgt,fs);
+    wavTgt = utils.fadein(d_fifo,wavTgt,fs);  wavTgt = utils.fadeout(d_fifo,wavTgt,fs);
     [wavMsk,mfs] = audioread([path_masker, 'masker_spch_orch.wav']); % read masker file
 
     %%% resample 
@@ -87,7 +87,7 @@ function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, n
     wavTgtfull(:,1) = [blank1; wavTgt; blank2]; % add blanks
 
     %%% mix
-    wavMsk = fadein(d_fifo,wavMsk,fs);  wavMsk = fadeout(d_fifo,wavMsk,fs);   
+    wavMsk = utils.fadein(d_fifo,wavMsk,fs);  wavMsk = utils.fadeout(d_fifo,wavMsk,fs);   
     stimulus = zeros(duration, numSpk); % make sure the amount of channels
     
     stimulus(:,1) = wavTgtfull;

@@ -17,6 +17,9 @@
 %%% v6 
 %%% 20230111 specialized for BDF processing
 
+addpath ../
+addpath ../+utils/
+
 %% variables
 
 opts = detectImportOptions('answer.csv'); %answer sheet
@@ -47,29 +50,29 @@ led2 = '/led2';
 
 %% OSC preparing - clear all message
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentReset = oscwrite(indicator, {''});
+commentReset = utils.oscwrite(indicator, {''});
 step(Hs, commentReset);
 
-conditionReset = oscwrite(condition, {''});
+conditionReset = utils.oscwrite(condition, {''});
 step(Hs, conditionReset);
 
-trialReset = oscwrite(trial_indicator, {''});
+trialReset = utils.oscwrite(trial_indicator, {''});
 step(Hs, trialReset);
 
-totalReset = oscwrite(total_indicator, {''});
+totalReset = utils.oscwrite(total_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = oscwrite(first_indicator, {''});
+totalReset = utils.oscwrite(first_indicator, {''});
 step(Hs, totalReset);
 
-totalReset = oscwrite(second_indicator, {''});
+totalReset = utils.oscwrite(second_indicator, {''});
 step(Hs, totalReset);
 
 ledstatus = {0}; % turn off the LED
-ledOn = oscwrite(led, ledstatus);
+ledOn = utils.oscwrite(led, ledstatus);
 step(Hs, ledOn);
 
-ledOn = oscwrite(led2, ledstatus);
+ledOn = utils.oscwrite(led2, ledstatus);
 step(Hs, ledOn);
 
 release(Hs)
@@ -77,11 +80,11 @@ release(Hs)
 
 %% experiment
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentSet = oscwrite(indicator, {'1 sec'});
+commentSet = utils.oscwrite(indicator, {'1 sec'});
 step(Hs, commentSet);
 release(Hs)
 pause(1);
-commentSet = oscwrite(indicator, {'touch the panel'});
+commentSet = utils.oscwrite(indicator, {'touch the panel'});
 step(Hs, commentSet);
 release(Hs)
 
@@ -95,18 +98,18 @@ disp('touch the panel')
 while outRest == 0
     dR=step(Hr); %dignal from iPad
     if isempty(dR)==0
-        [tag, data]=oscread(dR);
+        [tag, data]=utils.oscread(dR);
         % disp([tag num2str(data')]);
         break
     end
 end
 release(Hr);
 
-commentSet = oscwrite(indicator, {'connected'});
+commentSet = utils.oscwrite(indicator, {'connected'});
 step(Hs, commentSet);
 release(Hs)
 
 Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentSet = oscwrite(indicator, {'connected'});
+commentSet = utils.oscwrite(indicator, {'connected'});
 step(Hs, commentSet);
 release(Hs)

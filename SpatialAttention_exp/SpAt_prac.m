@@ -9,7 +9,7 @@
 % - Psychportaudio
 % 
 % #required functions
-% - data/
+% - data_load/
 % -- makestimuluslist.m
 %   stimulus list maker (all stimulus info included)
 % -- makestimulus.m
@@ -73,7 +73,7 @@ filename = ['Subj_' subj '_' timestamp];
 
 %% make stimulus table
 disp('making stimuli list')
-table = data.makestimuluslist(filename);
+table = data_load.makestimuluslist(filename);
 
 table2 = table;
 save('restemp.mat','table2');
@@ -150,18 +150,18 @@ responce = cell(numTrial,4);
 
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
         trialnumber = {i};
-        trialSet = utils.oscread(trial_indicator, trialnumber);
+        trialSet = utils.oscwrite(trial_indicator, trialnumber);
         step(Hs, trialSet);
         
         total = {sprintf('/ %d',numTrial)};
-        totalSet = utils.oscread(total_indicator, total);
+        totalSet = utils.oscwrite(total_indicator, total);
         step(Hs, totalSet);
         
         % indicate current task
-        commentSet = utils.oscread(indicator, {'Pay attention to the voice from "Ready"'});
+        commentSet = utils.oscwrite(indicator, {'Pay attention to the voice from "Ready"'});
         step(Hs, commentSet);
 
-        conditionSet = utils.oscread(condition, {'Single'});
+        conditionSet = utils.oscwrite(condition, {'Single'});
         step(Hs, conditionSet);            
         
         release(Hs);
@@ -170,7 +170,7 @@ responce = cell(numTrial,4);
         
         % Prepare sound
         restime = tic;
-        [stimulus, duration] = data.makestimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
+        [stimulus, duration] = data_load.makestimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
         
         PsychPortAudio('Volume', pahandle, volume); %adjust volume
         PsychPortAudio('FillBuffer', pahandle, stimulus');   % load stimulus
@@ -187,7 +187,7 @@ responce = cell(numTrial,4);
 
         ledstatus = {1}; % turn on the LED
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = utils.oscread(led, ledstatus);
+        ledOn = utils.oscwrite(led, ledstatus);
         step(Hs, ledOn);
         release(Hs);
         
@@ -205,7 +205,7 @@ responce = cell(numTrial,4);
         Hr=dsp.UDPReceiver('LocalIPPort',incoming);
         dR=[];
         
-        % excute until coming some message from iPadk
+        % excute until coming some message from iPad
         while (stat==true)
             dR=step(Hr);
             if isempty(dR)==0
