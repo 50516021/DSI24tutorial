@@ -31,6 +31,8 @@
 % ip = '192.168.0.107';
 ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
 % ip = '169.254.153.246'; %Akira's iPad
+ip = '192.168.0.73';
+
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side
 
@@ -193,7 +195,7 @@ responce = cell(numTrial,4);
         
         % indicater
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        commentSet = utils.oscread(indicator, {'Answer "Color" and "Number"'});
+        commentSet = utils.oscwrite(indicator, {'Answer "Color" and "Number"'});
         step(Hs, commentSet);
         release(Hs);
         
@@ -220,9 +222,9 @@ responce = cell(numTrial,4);
 
         if stat == false
             tag = 'NA';
-            commentSet = utils.oscread(indicator, {'TIME UP'});
+            commentSet = utils.oscwrite(indicator, {'TIME UP'});
         else
-            commentSet = utils.oscread(indicator, {'Sent'});            
+            commentSet = utils.oscwrite(indicator, {'Sent'});            
         end
         
         step(Hs, commentSet);
@@ -238,7 +240,7 @@ responce = cell(numTrial,4);
         
         ledstatus = {0}; % turn off the LED
         Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = utils.oscread(led, ledstatus);
+        ledOn = utils.oscwrite(led, ledstatus);
         step(Hs, ledOn);
         release(Hs);
         
@@ -247,7 +249,7 @@ responce = cell(numTrial,4);
             disp('taking a break...')
 
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscread(indicator, {'Take a rest. Press any key to continue'});
+            commentSet = utils.oscwrite(indicator, {'Take a rest. Press any key to continue'});
             step(Hs, commentSet);
             release(Hs);
             
@@ -269,7 +271,7 @@ responce = cell(numTrial,4);
             release(Hr);
             
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscread(indicator, {''});
+            commentSet = utils.oscwrite(indicator, {''});
             step(Hs, commentSet);
             release(Hs)
             
@@ -280,13 +282,13 @@ responce = cell(numTrial,4);
     end
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = utils.oscread(indicator, {'Finish'});
+    commentSet = utils.oscwrite(indicator, {'Finish'});
     step(Hs, commentSet);
     release(Hs)
 %     
 % catch
 %     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-%     commentSet = utils.oscread(indicator, {'ERROR'});
+%     commentSet = utils.oscwrite(indicator, {'ERROR'});
 %     step(Hs, commentSet);
 %     release(Hs)
 %     

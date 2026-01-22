@@ -33,6 +33,7 @@ corTable = table2array(corTable(:,1:2)); %reference of responce and answer
 ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
 % ip = '169.254.165.177'; %Akira's iPad with Macbook network
 % ip = '192.168.10.100'; %Akira's iPad with Tohoku localnet
+ip = '192.168.0.73';
 
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side
