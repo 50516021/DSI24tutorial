@@ -18,7 +18,7 @@
 function [] = SoundTest_v1(numSpk, numIter) 
 
 % numSpk  = 2; %number of speakers
-% numIter = 2; %numbert of iteration 
+% numIter = 2; %number of iteration 
 
 %% audio parameters
 
