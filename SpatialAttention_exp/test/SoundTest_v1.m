@@ -1,24 +1,24 @@
-%%% Sound test v1%%%
-%%% - check sound and speaker configuration
-%%%   play sin tone as many as the channel number and pink noise
+% Sound test v1%%%
+% - check sound and speaker configuration
+%   play sin tone as many as the channel number and pink noise
 
-%%% Evaluation - Peak of ERP for t-test%% 
-%%% - evoked responce
-%%%
-%%% required Add-ons
-%%% - 
-%%% required functions
-%%% - 
-%%% required setting files
-%%% - 
+% Evaluation - Peak of ERP for t-test%% 
+% - evoked response
+%
+% required Add-ons
+% - 
+% required functions
+% - 
+% required setting files
+% - 
 
-%%% v1  
-%%% 20231114 for multichannel sound test
+% v1  
+% 20231114 for multichannel sound test
 
 function [] = SoundTest_v1(numSpk, numIter) 
 
 % numSpk  = 2; %number of speakers
-% numIter = 2; %numbert of iteration 
+% numIter = 2; %number of iteration 
 
 %% audio info
 out = PsychPortAudio('GetDevices'); %get sound device information for Psychtool box

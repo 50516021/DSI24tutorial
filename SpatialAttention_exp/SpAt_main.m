@@ -19,7 +19,7 @@
 % #required setting files
 % 
 % #latest updates
-% 20240503 minor changes from Japanese exps
+% 20240503 minor changes from Japanese exps (derived from experiment_CRM_re2_EEGv6.m for Sean & Kangeun lesson)
 
 close all;
 

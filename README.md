@@ -41,25 +41,20 @@ donning tutorial of the DSI-24.
 Signal Quality/Diagnostic Protocol
 
 - [This video](https://youtu.be/6juYPfUCEbA) is a
-detailed breakdown of the signal quality test, as well as what kind of
-artifacts can occur (such as CBA) and how to address them
+detailed breakdown of the signal quality test, as well as what kind of artifacts can occur (such as CBA) and how to address them
 
 DSI Streamer
 
 - [This video](https://youtu.be/fwekDusaxV8) is a
-detailed breakdown of how to use DSI Streamer, which will go over
-things including how to record, how to create custom
-montages, and more
+detailed breakdown of how to use DSI Streamer, which will go over things including how to record, how to create custom montages, and more
 
 Cleaning & Maintenance
 
 - [This video](https://youtu.be/nTn2-z9ssmU) has
-information on cleaning, how to replace electrodes, and
-how to properly pack and store the system
+information on cleaning, how to replace electrodes, and how to properly pack and store the system
 
 Human Subject Safety
 
 - [This video](https://youtu.be/rlxmvyxiVyU) has
-information on headaches, lice, skin issues, and hair products that can't be
-used with the system
+information on headaches, lice, skin issues, and hair products that can't be used with the system
 
