@@ -78,6 +78,7 @@ corTable = table2array(corTable(:,1:2)); %reference of responce and answer
 % for OSC %
 % ip = '192.168.0.107'; %ip adress for iPad
 ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
+ip = '192.168.0.73';
 
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side
@@ -145,7 +146,7 @@ end
 %% make stimulus table
 if ExpSt == 1 %whwther new or continued
     disp('making stimuli list')
-    table = data.makestimuluslist(filename);
+    table = data_load.makestimuluslist(filename);
     
     table2 = table;
     save('restemp.mat','table2');
@@ -389,7 +390,7 @@ try
             disp(MesBrk) % status message
 
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscread(indicator, {'Take a rest. Press any key to continue'});
+            commentSet = utils.oscwrite(indicator, {'Take a rest. Press any key to continue'});
             step(Hs, commentSet);
             release(Hs);
             
@@ -411,7 +412,7 @@ try
             release(Hr);
             
             Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscread(indicator, {''});
+            commentSet = utils.oscwrite(indicator, {''});
             step(Hs, commentSet);
             release(Hs)
             
@@ -428,13 +429,13 @@ try
     delete(obj.sp);
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = utils.oscread(indicator, {'Finished. Thank you!'});
+    commentSet = utils.oscwrite(indicator, {'Finished. Thank you!'});
     step(Hs, commentSet);
     release(Hs)
     
 catch
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = utils.oscread(indicator, {'ERROR'});
+    commentSet = utils.oscwrite(indicator, {'ERROR'});
     step(Hs, commentSet);
     release(Hs)
 
