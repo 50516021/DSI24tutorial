@@ -1,0 +1,184 @@
+
+% Spatial Attention EEG analysis for BDF/EDF/CSV - step 1 % 
+% - epoching for both Masker and Target onsets
+%
+% required Add-ons
+% - EEGLAB
+% - EEGLAB wearable sensing extension (latest version can be installed manually)
+% - Optimization Toolbox
+% - Signal Processing Toolbox
+% - Statistics and Machine Learning Toolbox
+% - Parallel Computing Toolbox
+% 
+% required functions
+% - +utils/BPF.m
+% - +utils/checkEEGLABOpen.m
+% 
+% required files
+% - metadata of the subject (res file)
+
+
+% 20260128 derived from SPAt_analysis1_epoching_v2.m for DSI-24 tutorial
+
+% addpath(dir('eeglab*').name); %add path of EEGLAB
+% eegLabver = '2023.1'; %EEGLAB version
+
+%% parameter
+
+TgMsk = 240; %trigger value of maskers
+TgTgt = 230; %trigger value of targets
+
+% duration = starttime + streamdur + poststream (refer experiment diagram)
+pretrigger = 0.5;  %time duration before trigger (sec)
+poststream = 0.5;  %time duration after stimuli (sec)
+prestream  = 0.5;  %time duration before target (sec)
+targetdur  = 2.8;  %target duration (sec)
+baselinedur= 0.3;  %duration of baseline (sec)
+triggerthre = 0.70; %threshold of the trigger (sec)
+streamdurMin = 5.0; %minimum stream duration (sec)
+streamdurMax = 7.0; %maximum stream duration (sec)
+fpass = [1.5 20]; %frequency of low/hi cut (Hz)
+fs = 256; %resample rate
+
+%% experiment info 
+
+% determine the device
+devOpt = ["Biosemi (BDF)" "DSI-24 (CSV/EDF)"]; % EEG device option
+prompt = 'Choose EEG device'; % prompt message
+[dev,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[150 100],'ListString',devOpt); % option selection window
+datadir = {'../01_OriginalData/BDFdata/' '../01_OriginalData/EDFdata/'};
+
+% subject number %
+prompt = {'Enter subjects number:'}; 
+dlgtitle = 'Input';
+dims = [1 35];
+definput = {'00000'};
+answerNum = inputdlg(prompt,dlgtitle,dims,definput);
+sNum = answerNum{1};
+
+% experiment name %
+folders = struct2table(dir([datadir{dev}, 's', sNum, '*']));
+prompt = 'Choose folder name:';  % prompt message
+[foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[250 200],'ListString',folders.name); % option selection window
+experiment_name = folders.name(foldInd,:); %subject (experiment) name
+
+if iscell(experiment_name)
+    experiment_name = experiment_name{:};
+end
+
+outfolder =  sprintf('subject/%s/', experiment_name); %name of the output folder containing the subject's data 
+savepath = '';
+
+if ~exist(outfolder, 'dir') %check folder existence
+    mkdir(outfolder) %make directory
+end
+
+%% get behavioral data
+
+filepath = strcat(datadir{dev}, experiment_name, '/');
+resfile = ls([filepath, 'res*']); %find response file
+resfile = resfile(1:end-1); %extract unnecessary charactar
+load(resfile); %participant's responses
+save([outfolder extractAfter(resfile, filepath)],'res'); %copy response (behavioral data) file 
+
+numTrial = size(res,1); %amount of trials [manual]
+
+%% load EEG data 
+% Biosemi (BDF) %
+if dev == 1
+    % BDF file name %
+    files = struct2table(dir([datadir{dev}, 's', sNum, '*/*bdf']));
+    prompt = 'Chose BDF file name:';  % prompt message
+    [foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[250 200],'ListString',files.name); % option selection window
+    if ~iscell(files.folder)
+        bdfname = strcat(files.folder(foldInd,:), '/', files.name(foldInd,:)); %subject (experiment) name
+    else
+        bdfname = strcat(files.folder{foldInd,:}, '/', files.name{foldInd,:}); %subject (experiment) name
+    end
+
+    h = openbdf(bdfname); %open BDF file
+    d = readbdf(h,1:h.Head.NRec); %read BDF data
+    tg = d.Record(end,:)'; %trigger 
+
+    numCh = 16; %since Biosemi only records 32 channels minimum, the number of the channels is set manually
+    fsOgnl = h.Head.SampleRate(1); %Original EEG sampling rate
+    eeg = utils.BPF(d.Record(1:numCh,:)', fsOgnl, fsOgnl, fpass(1), fpass(2)); %band pass filter
+
+    onsets = find((fs*1>diff(tg)).*(diff(tg)>0)) + 1; %index of all peaks in tg channel
+    events = tg(onsets) - tg(onsets-2); %trigger value
+
+% DSI-24 (CSV/EDF) %
+elseif dev == 2
+    if ~utils.checkEEGLABOpen; eeglab; end %read DSI-24 data (open EEGLAB if not)
+    fprintf('Load CSV data from EEGLAB window or load the .mat file manually (Subject No.%s)\n', convertCharsToStrings(sNum));
+    keyboard; %wait
+    
+    EEGstruct = EEG; %EEG data acquired by EEGLAB
+    chConv = [1:15 18:19 21:23]; %channel extraction ((9-A1),16-X3,17-X2,20-X1,(21-A2)) - remove X1,2,3
+    % -> after extraction (9-A1, 18-A2) 
+    numCh = length(chConv); %number of EEG channels (except trigger)
+    fsOgnl = EEGstruct.srate; %[manual]
+
+    eeg = EEGstruct.data; %get EEG data
+    eeg = eeg(chConv,:); %reorder channels
+    eeg = utils.BPF(double(eeg)', fsOgnl, fpass(1), fpass(2)); % BPF = band pass filter
+
+    % trigger data
+    Ev = EEGstruct.event; %[manual] 
+    onsets = [Ev.latency]; 
+    onsets = onsets(:)'; %Hwan: 5-end, SY: 3-end [manual]
+    events = {Ev.type};
+    events = str2double(events(:))'; %Hwan: 5-end, SY: 3-end [manual]
+
+    % save original EEG data
+    save([outfolder, 'original_', experiment_name '.mat'],'EEG');
+end
+
+% get onset's indices
+Mskonsets = onsets(events==TgMsk); %index of masker (stimuli) onset 
+Tgtonsets = onsets(events==TgTgt); %index of target onset 
+
+%% match the trials if there was an interruption
+restPoint = str2double(input('Where is the restart point? ','s'));
+if restPoint ~= 0
+    temp = Mskonsets; clear Mskonsets;
+    Mskonsets(1:restPoint-1) = temp(1:restPoint-1);
+    Mskonsets(restPoint:numTrial) = temp(end-(numTrial-restPoint):end);
+    temp = Tgtonsets; clear Tgtonsets;
+    Tgtonsets(1:restPoint-1) = temp(1:restPoint-1);
+    Tgtonsets(restPoint:numTrial) = temp(end-(numTrial-restPoint):end);
+end
+
+numTrial_Msk = length(Mskonsets); %overwrite amount of trials [manual]
+numTrial_Tgt = length(Tgtonsets); %overwrite amount of trials [manual]
+
+%% baseline
+t = -baselinedur:1/fs:(streamdurMax); %full time base
+basetime = -baselinedur: 1/fsOgnl : (streamdurMax - 1/fsOgnl); %base time of each stream 
+baseline = find( (-baselinedur<basetime) .* (basetime<0) ); %EEG baseline guide
+
+%% epoching for MASKER onset
+clear epochs %clear cash
+streamdur = fix(fsOgnl*(baselinedur+streamdurMax)); %data stream duration
+epochs = zeros(fix(streamdur/fsOgnl*fs)+1,numCh,numTrial_Msk); %epochs(EEG signal, channel, trial)
+
+for k = 1:numTrial_Msk
+    temp = eeg(Mskonsets(k)-fix(fsOgnl*baselinedur)+1 : Mskonsets(k)+fix(fsOgnl*streamdurMax),:); %EEG data region following masker onset triggers
+    temp = temp - repmat(mean(temp(baseline,:)),size(temp,1),1); %subtract baseline (re-base)
+    epochs(:,:,k) = resample(temp,fs,fsOgnl);     %subtracted epoch
+end
+
+save([outfolder 'step1_Msk_' experiment_name '.mat'],'epochs','t','fs');
+
+%% epoching for TARGET onset
+clear epochs %clear cash
+streamdur = fix(fsOgnl*(baselinedur+targetdur))+1; %data stream duration
+epochs = zeros(fix(streamdur/fsOgnl*fs)+1,numCh,numTrial_Tgt); %epochs(EEG signal, channel, trial)
+
+for k = 1:numTrial_Tgt
+    temp = eeg(Tgtonsets(k)-fix(fsOgnl*baselinedur)+1 : Tgtonsets(k)+fix(fsOgnl*targetdur),:); %EEG data region following target onset triggers
+    temp = temp - repmat(mean(temp(baseline,:)),size(temp,1),1); %subtract baseline (re-base)
+    epochs(:,:,k) = resample(temp,fs,fsOgnl);     %subtracted epoch
+end
+
+save([outfolder 'step1_Tgt_' experiment_name '.mat'],'epochs','t','fs');
