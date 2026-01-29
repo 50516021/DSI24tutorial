@@ -1,5 +1,5 @@
 % Spatial Attention EEG analysis for BDF/EDF/CSV - step 2 % 
-% - art remove 1
+% - artifact removal 1 - trial and channel based, ICA calculation
 % chose masker or target based mat file
 %
 % required Add-ons
@@ -13,11 +13,8 @@
 % - BiosemiSettingfiles/BioSemiElecCoor_128.txt
 % - LocationFiles/DSI-24 Channel Locations w.ced
 
-% v1  
-% 20221227 for Biosemi with 16 chnannel
-% 20230219 for DSI-24 with 19 channel
-% 20230318 adapted subject numbers
-% 20230830 lotated DSI-24 channel locations
+
+% 20260128 derived from SPAt_analysis2_artrmv1.m for DSI-24 tutorial
 
 clearvars; close all;
 
@@ -103,7 +100,7 @@ chs = union(chs,BadChannels);
 eeg = permute(epochs(:,:,GoodTrials),[2,1,3]);
 
 %read location files
-numCh   = size(epochs,2); %number of chanels
+numCh   = size(epochs,2); %number of channels
 if numCh == 20
     locstemp    = readlocs('LocationFiles/DSI-24 Channel Locations w.ced'); %channel configuration file for numCh channels (DSI-24)
     locstable = struct2table(locstemp); %swap X and Y

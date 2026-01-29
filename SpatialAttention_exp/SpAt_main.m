@@ -2,19 +2,16 @@
 % - main experiment script of EEG measurement on CRM (SRT) test
 %
 % #required Add-ons
-% - Psychportaudio
-% 
+% - Psychtoolbox
+% - DSP System Toolbox
 % 
 % #required functions
-% - data/
-% -- makestimuluslist.m
+% - +data_load/makestimuluslist.m
 %   stimulus list maker (all stimulus info included)
-% -- makestimulus.m
+% - +data_load/makestimulus.m
 %   stimulus maker for v4
-% - utils/
-% -- oscread.m
-%
-% -- oscwrite.m
+% - +utils/oscread.m
+% - +utils/oscwrite.m
 % 
 % #required setting files
 % 
@@ -104,11 +101,13 @@ baudrate = [115200 9600]; %baud rate for trigger (Biosemi: 115200, DSI-24: 9600)
 % use 'ls /dev/tty.*' to specify the port ID
 comport = ls('/dev/tty.usb*'); %automatically get the port (only for Mac OS)
 comport = comport(1:end-1);
-% comport = '/dev/cu.usbserial-DN36PGTH';
-% comport = 'COM4';
+% comport = 'COM4'; % Windows example
 targetdur = 2.8; %target time duration
 
 %% audio info
+
+InitializePsychSound; %PsychTool Box
+
 out = PsychPortAudio('GetDevices'); %get sound device information for Psychtool box
 prompt = 'Choose Audio device'; % prompt message
 [DevID_indx,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[200 150],'ListString',{out.DeviceName}); % option selection window
@@ -119,10 +118,10 @@ buffer = 100; %playback buffer size
 volume = 1; % stimuli volume
 restintvl = 20; % interval between each test block
 
-InitializePsychSound; %PsychTool Box
 pahandle = PsychPortAudio('Open', DevID, [], 2, fs, numSpk, buffer); % must be the same parameters with the current AUDIO Hardware such as FS, etc.
 
-%% get parsonal data
+%% get personal data
+
 if ExpSt == 1
     prompt = {'Enter subjects number:'}; %subject number
     dlgtitle = 'Input';

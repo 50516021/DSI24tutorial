@@ -1,5 +1,5 @@
 % Spatial Attention EEG analysis for BDF/EDF/CSV - step 3 % 
-% - art remove 2
+% - artifact removal 2 - ICA based
 %
 % required Add-ons
 % - EEGLAB
