@@ -1,4 +1,4 @@
-# Spatial Attention - DSI24 tutorial
+# Spatial Attention: DSI-24 tutorial
 Tutorial and utilities for Spatial Attention by using Wearable Sensing DSI-24
 
 This repository contains example scripts and utilities for running a

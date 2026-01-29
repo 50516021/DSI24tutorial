@@ -133,12 +133,12 @@ shorteststs = 1.5; %minimum start time (sec)
 numCh = length(allchs);
 if numCh == 20 %DSI-24
     disp('Device: DSI-24')
-    locs    = struct2table(readlocs('LocationFiles/DSI-24 Channel Locations w.ced')); %channel configuration file for numCh channels (DSI-24)   
+    locs    = struct2table(readlocs('../01_OriginalData/LocationFiles/DSI-24 Channel Locations w.ced')); %channel configuration file for numCh channels (DSI-24)   
     Hotch = [4 8]; % Fz and Cz
     Coldch = [14 15]; % O1 and O2
 else %Biosemi
     disp('Device: Biosemi')
-    locfile = strcat('LocationFiles/BioSemiElecCoor_', num2str(numCh), '.txt'); %channel configuration file for numCh channels (Biosemi)
+    locfile = strcat('../01_OriginalData/LocationFiles/BioSemiElecCoor_', num2str(numCh), '.txt'); %channel configuration file for numCh channels (Biosemi)
     locs    = struct2table(readlocs(locfile,'filetype','xyz')); %load channel configuration file 
     Hotch = [4 8]; % Fz and Cz
     Coldch = [14 16]; % O1 and O2

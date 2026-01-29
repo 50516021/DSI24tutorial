@@ -24,14 +24,18 @@ folders = struct2table(dir('subject/s*'));
 prompt = 'Choose folder name:';  % prompt message
 [foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[400 800],'ListString',folders.name); % option selection window
 experiment_name = folders.name(foldInd,:); %subject (experiment) name
-outfolder =  sprintf('subject/%s/', experiment_name{1}); %name of the output folder containing the subject's data 
+if iscell(experiment_name)
+    experiment_name = experiment_name{1};
+end
+outfolder =  sprintf('subject/%s/', experiment_name); %name of the output folder containing the subject's data 
 
 % get filenames
 OnsetOpt = ["Msk" "Tgt"]; %options of onsets
 prompt = 'Choose onset option:';  % prompt message
 [OnsetOptInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[200 200],'ListString',OnsetOpt); % option selection window
 
-data_name = strcat(OnsetOpt(OnsetOptInd), '_', experiment_name{1});
+
+data_name = strcat(OnsetOpt(OnsetOptInd), '_', experiment_name);
 fname = strcat(outfolder, 'step1_', data_name, '.mat'); %epoched EEG data file name with its path
 disp(['----- Processing: ' char(data_name), ' -----']) %make sure the processing data
 % subjID = fname(8:13);
@@ -102,7 +106,7 @@ eeg = permute(epochs(:,:,GoodTrials),[2,1,3]);
 %read location files
 numCh   = size(epochs,2); %number of channels
 if numCh == 20
-    locstemp    = readlocs('LocationFiles/DSI-24 Channel Locations w.ced'); %channel configuration file for numCh channels (DSI-24)
+    locstemp    = readlocs(['../01_OriginalData/LocationFiles/DSI-24 Channel Locations w.ced']); %channel configuration file for numCh channels (DSI-24)
     locstable = struct2table(locstemp); %swap X and Y
     temp = locstable.X;
     locstable.X = locstable.Y;
@@ -110,7 +114,7 @@ if numCh == 20
     locstable.theta = locstable.theta + 90;
     locs=table2struct(locstable);
 else
-    locfile = strcat('LocationFiles/BioSemiElecCoor_', num2str(numCh), '.txt'); %channel configuration file for numCh channels (Biosemi)
+    locfile = strcat('../01_OriginalData/LocationFiles/BioSemiElecCoor_', num2str(numCh), '.txt'); %channel configuration file for numCh channels (Biosemi)
     locs    = readlocs(locfile,'filetype','xyz'); %load channel configuration file 
 end
 % pop_chanedit(locs); %if needed
