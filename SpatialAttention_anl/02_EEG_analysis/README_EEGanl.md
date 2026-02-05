@@ -67,3 +67,18 @@ Run 'Evl_RMS_*.m', 'Evl_peak_*.m', 'Evl_GFP.m', etc.
 	made for SNR behavioral data
 - 20260123 <br>
     README format aligned with BehavioralAnalysis_2023; updated directory structure and usage description
+
+
+## Author
+
+**Akira Takeuchi**<br>
+- [github/50516021](https://github.com/50516021)
+- [Official Homepage](https://akiratakeuchi.com/)
+
+## License
+
+Copyright © 2025, [Akira Takeuchi](https://github.com/50516021).
+Released under the [MIT License](LICENSE).
+
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/Studio-Infinity/SQA_subtest/blob/main/LICENSE

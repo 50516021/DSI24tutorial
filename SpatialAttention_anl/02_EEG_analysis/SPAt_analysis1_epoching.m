@@ -90,7 +90,7 @@ if dev == 1
     files = struct2table(dir([datadir{dev}, 's', sNum, '*/*bdf']));
     prompt = 'Chose BDF file name:';  % prompt message
     [foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[250 200],'ListString',files.name); % option selection window
-    if ~iscell(files.folder)
+    if ~iscell(files.folder)origin
         bdfname = strcat(files.folder(foldInd,:), '/', files.name(foldInd,:)); %subject (experiment) name
     else
         bdfname = strcat(files.folder{foldInd,:}, '/', files.name{foldInd,:}); %subject (experiment) name
