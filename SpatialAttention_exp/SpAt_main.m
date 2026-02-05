@@ -32,7 +32,7 @@ if ExpSt == 1
     disp('NEW Expeiriment')
 else
     % subject number %
-    prompt = {'Enter subjects number:'}; 
+    prompt = {'Enter subjects number:'};
     dlgtitle = 'Input';
     dims = [1 35];
     definput = {'00000'};

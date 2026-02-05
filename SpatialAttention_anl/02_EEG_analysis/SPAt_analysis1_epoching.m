@@ -40,6 +40,7 @@ streamdurMax = 7.0; %maximum stream duration (sec)
 fpass = [1.5 20]; %frequency of low/hi cut (Hz)
 fs = 256; %resample rate
 
+OSflag = utils.OSdetection_v1; %OS system detection
 %% experiment info 
 
 % determine the device
@@ -77,7 +78,11 @@ end
 
 filepath = strcat(datadir{dev}, experiment_name, '/');
 resfile = ls([filepath, 'res*']); %find response file
-resfile = resfile(1:end-1); %extract unnecessary charactar
+if OSflag(1) == "1" %Mac
+    resfile = resfile(1:end-1); %extract unnecessary charactar
+elseif OSflag(1) == "2" %Windows
+    resfile = [filepath, resfile];
+end
 load(resfile); %participant's responses
 save([outfolder extractAfter(resfile, filepath)],'res'); %copy response (behavioral data) file 
 
@@ -90,7 +95,7 @@ if dev == 1
     files = struct2table(dir([datadir{dev}, 's', sNum, '*/*bdf']));
     prompt = 'Chose BDF file name:';  % prompt message
     [foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[250 200],'ListString',files.name); % option selection window
-    if ~iscell(files.folder)origin
+    if ~iscell(files.folder)
         bdfname = strcat(files.folder(foldInd,:), '/', files.name(foldInd,:)); %subject (experiment) name
     else
         bdfname = strcat(files.folder{foldInd,:}, '/', files.name{foldInd,:}); %subject (experiment) name

@@ -1,16 +1,16 @@
-%%% OSdetection  %%% 
-%%% - Operation Software detection that returns Os flag and its name
-%%%
-%%% required Add-ons
-%%% - 
-%%% - 
-%%% required functions
-%%% - 
-%%% required setting files
-%%% - 
+%%% OSdetection  %%%
+% - Operation Software detection that returns Os flag and its name
+%
+% required Add-ons
+% -
+% -
+% required functions
+% -
+% required setting files
+% -
 
-%%% v1  
-%%% 20230927 OS detection that returns Os flag and its name
+% v1
+% 20230927 OS detection that returns Os flag and its name
 
 function OSflag = OSdetection_v1()
 

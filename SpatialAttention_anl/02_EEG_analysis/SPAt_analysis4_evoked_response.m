@@ -17,6 +17,7 @@
 clearvars; close all;
 % pname = 'R:\06_Tutorials\EEGanalysisWorkshop2022\example_ISNT';
 
+OSflag = utils.OSdetection_v1; %OS system detection
 %% parameters
 %get folder name
 folders = struct2table(dir('subject/s*'));
@@ -33,7 +34,12 @@ disp(['Processing: ' experiment_name]) %make sure the processing data
 
 % get behavioral data
 resfile = ls([outfolder '/res*']);
-load(resfile(1:end-1)); %participant's responses
+if OSflag(1) == "1" %Mac
+    resfile = resfile(1:end-1); %extract unnecessary charactar
+elseif OSflag(1) == "2" %Windows
+    resfile = [outfolder, resfile];
+end
+load(resfile); %participant's responses
 tgArray= table2array(res(:,12)); %extract answer section
 
 % filter settings
