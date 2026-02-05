@@ -26,6 +26,20 @@ Akira Takeuchi modified for EEG measurement.
 Matlab toolboxes (libraries)
 
 ## EEG devices
-- DSI-24 ()
+- DSI-24 (Wearable Sensing)
+
+## Author
+
+**Akira Takeuchi**<br>
+- [github/50516021](https://github.com/50516021)
+- [Official Homepage](https://akiratakeuchi.com/)
+
+## License
+
+Copyright © 2025, [Akira Takeuchi](https://github.com/50516021).
+Released under the [MIT License](LICENSE).
+
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/Studio-Infinity/SQA_subtest/blob/main/LICENSE
 
 

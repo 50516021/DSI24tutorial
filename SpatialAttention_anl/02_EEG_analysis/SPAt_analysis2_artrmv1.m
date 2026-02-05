@@ -34,7 +34,6 @@ OnsetOpt = ["Msk" "Tgt"]; %options of onsets
 prompt = 'Choose onset option:';  % prompt message
 [OnsetOptInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[200 200],'ListString',OnsetOpt); % option selection window
 
-
 data_name = strcat(OnsetOpt(OnsetOptInd), '_', experiment_name);
 fname = strcat(outfolder, 'step1_', data_name, '.mat'); %epoched EEG data file name with its path
 disp(['----- Processing: ' char(data_name), ' -----']) %make sure the processing data

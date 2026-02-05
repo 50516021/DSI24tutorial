@@ -30,7 +30,7 @@ dur_pink = 6.5; %pink noise duration
 
 %% audio info acquisition
 
-InitializePsychSound %PsychTool Box
+InitializePsychSound %PsychToolBox
 out = PsychPortAudio('GetDevices'); %get sound device information for Psychtool box
 prompt = 'Choose Audio device'; % prompt message
 [DevID_indx,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[200 150],'ListString',{out.DeviceName}); % option selection window
