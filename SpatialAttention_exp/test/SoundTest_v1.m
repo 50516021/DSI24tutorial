@@ -4,6 +4,7 @@
 %   used for sound check and measurement
 %
 % required Add-ons
+% - Audio Toolbox
 % - Psychtoolbox
 % required functions
 % - 
@@ -17,9 +18,13 @@
 
 function [] = SoundTest_v1(numSpk, numIter) 
 
-% numSpk  = 2; %number of speakers
-% numIter = 2; %numbert of iteration 
-
+% default parameters
+if nargin <1
+    numSpk  = 2; %number of speakers
+end
+if nargin <2
+    numIter = 2; %numbert of iteration
+end
 %% audio parameters
 
 buffer   = 100; %playback buffer size

@@ -23,7 +23,9 @@ pname = '';
 folders = struct2table(dir('subject/s*'));
 prompt = 'Chose folder name:';  % prompt message
 [foldInd,tf] = listdlg('PromptString',prompt,'SelectionMode','single','ListSize',[400 700],'ListString',folders.name); % option selection window
-experiment_name = folders.name{foldInd,:}; %subject (experiment) name
+if iscell(experiment_name)
+    experiment_name = experiment_name{1};
+end
 outfolder =  sprintf('subject/%s/', experiment_name); %name of the output folder containing the subject's data 
 
 % get filenames
