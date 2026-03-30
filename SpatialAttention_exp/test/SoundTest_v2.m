@@ -1,0 +1,116 @@
+% Sound test v1%%%
+% - check sound and speaker configuration
+%   play sine tone from all the channel one by one 
+%   used for sound check and measurement
+%
+% required Add-ons
+% - Audio Toolbox (audiostreamer)
+% required functions
+% - 
+% required setting files
+% - 
+
+% v1  
+% 20231114 for multichannel sound test
+% 20260122 amended comments, re-organize audio prep part
+% v2 - audioStreamer version (no PTB required)
+% 20260222 added command line counter to track elapsed time during playback, especially for long pink noise segments
+
+
+function [] = SoundTest_v2(numSpk, numIter) 
+
+% default parameters
+if nargin <1
+    numSpk  = 2; %number of speakers
+end
+if nargin <2
+    numIter = 2; %numbert of iteration
+end
+%% audio parameters
+
+buffer   = 100; %playback buffer size
+fs       = 48000; % sample rate for audio
+volume   = 1; % stimuli volume
+vol_sin  = 0.3; %sintone volume
+dur_pink = 6.5; %pink noise duration
+frameSize = buffer; % frame size for streaming
+
+%% audio info acquisition & Device Setup
+
+% Use audiodevinfo(0) (output devices) and pass a device *name* to
+% audiostreamer, as recommended for older releases.
+playerNames = audiostreamer.getPlayerNames;
+
+[idx, tf] = listdlg('PromptString', 'Select Audio Device:', 'ListString', playerNames);
+
+playerName = playerNames(idx);
+streamer = audiostreamer('Player', playerName, 'SampleRate', fs);
+% Set up the reader/player queue (Buffer size can be tuned for "severe" timing)
+setup(streamer, zeros(frameSize, numSpk));
+
+%% Sine wave Generation
+
+dt = 1/fs;           % seconds per sample
+SinDur = .05;             % duration [sec]
+t = (0:dt:SinDur-dt)';   % seconds
+F = 1000;                % Sine wave frequency (hertz)
+sinwave = sin(2*pi*F*t)*vol_sin;
+    
+%% Pink Noise Generation
+
+Pnoise=pinknoise(fs*dur_pink);
+
+%% Playback with Real-Time Counter
+
+fprintf('Playing... Seconds passed: ');
+startTime = tic;
+lastReportedTime = -1;
+
+for i = 1:numIter
+    for j = 1:numSpk
+        
+        % 1. Play Sine Pulses
+        for k = 1:j
+            sintone_multi = zeros(frameSize, numSpk);
+            sintone_multi(1:length(sinwave), j) = sinwave;
+
+            play(streamer, sintone_multi, "non-blocking")
+            updateCounter();
+            pause(0.1); 
+        end
+    
+        % 2. Play Pink Noise in Chunks (allows counter to tick during playback)
+        numFrames = floor(length(Pnoise) / frameSize);
+        for f = 1:numFrames
+            idxStart = (f-1)*frameSize + 1;
+            idxEnd   = f*frameSize;
+            
+            noise_frame = zeros(frameSize, numSpk);
+            noise_frame(:, j) = Pnoise(idxStart:idxEnd);
+            
+            % play(streamer, noise_frame, "non-blocking");
+            play(streamer, noise_frame);
+            updateCounter();
+        end
+    end
+end
+
+%% Nested function to handle the command line UI
+    function updateCounter()
+        currSec = floor(toc(startTime));
+        if currSec > lastReportedTime
+            if lastReportedTime ~= -1
+                fprintf(repmat('\b', 1, length(num2str(lastReportedTime))));
+            end
+            fprintf('%d', currSec);
+            lastReportedTime = currSec;
+        end
+    end
+
+release(streamer);
+fprintf('\nTest Finished.\n');
+end
+
+ 
+ 
+        

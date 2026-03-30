@@ -12,6 +12,17 @@ The project is organized into two main parts:
 - `SpatialAttention_anl/` – example data folders and a workspace for
   analysis scripts on DSI-24 recordings.
 
+### Experiment requirements
+
+To run the experiment scripts in `SpatialAttention_exp/` (e.g. `SpAt_main_v2.m`, `SpAt_prac_v2.m`, `test/SoundTest_v2.m`), you will need:
+
+- MATLAB with **Audio Toolbox** (for the `audiostreamer` audio output)  
+- **DSP System Toolbox** (UDP / OSC communication utilities)  
+- A DSI-24 system with DSI Streamer (for EEG recording; started separately)
+
+Note: the current versions of the main and practice scripts no longer require Psychtoolbox for audio playback.  
+Earlier versions of the experiment scripts (e.g. `SpAt_main.m`, `SpAt_prac.m`, older test scripts) are still available in this repository and use Psychtoolbox-based audio.
+
 ---
 
 ## Directory Structure
