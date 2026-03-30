@@ -1,29 +1,49 @@
-# SpatialAttentionEEG experiment
-modified Spatial Attentiontest
+# SpatialAttention_exp – experiment scripts
 
-Scripts for CRM test with EEG.
+Spatial attention (CRM) experiment scripts for EEG measurement.
 
-CRM:coordinate responce measure
-EEG:electroencephalography
+CRM: coordinate response measure  
+EEG: electroencephalography
 
-## content
-- experiment_CRM_re2_*.m
-Main doc for the experiment
-- makestimuluslist_*
-Make stimulus list function for the main exp
-- fadein.m / fadeout.m
-fade in/out functions for stimuli playback
+This folder contains:
 
+## Main scripts
+- `SpAt_main_v2.m`  
+	Main experiment script (EEG + OSC), using MATLAB Audio Toolbox `audiostreamer` (no Psychtoolbox required).
+- `SpAt_prac_v2.m`  
+	Practice version of the CRM test, also using `audiostreamer`.
+
+## Utility / test scripts
+- `test/SoundTest_v2.m`  
+	Multichannel sound test using `audiostreamer` (sine tone + pink noise for each loudspeaker).
+- `+data_load/makestimuluslist.m`  
+	Stimulus list maker for the main/practice experiments.
+- `+data_load/makstimulus.m`  
+	Stimulus waveform generator used by the experiment scripts.
+- `+utils/oscread.m`, `+utils/oscwrite.m`  
+	OSC communication helpers for TouchOSC / iPad control.
+- `+utils/fadein.m`, `+utils/fadeout.m`  
+	Fade in/out functions for stimulus playback.
+
+## Requirements
+
+MATLAB and toolboxes:
+- MATLAB with **Audio Toolbox** (for `audiostreamer`)
+- **DSP System Toolbox** (UDP / OSC helpers)
+- DSI Streamer (for DSI‑24 recording; run separately)
+
+Psychtoolbox is **not required** for SpAt_main_v2 / SpAt_prac_v2 / SoundTest_v2.
 
 ## Procedure
 
+1. Confirm DSI‑24 and DSI Streamer are configured and recording.  
+2. Start the experiment script (`SpAt_main_v2.m` for main, `SpAt_prac_v2.m` for practice) in MATLAB.  
+3. Select the desired audio output device when prompted (via `audiostreamer.getPlayerNames`).  
+4. Control trial start/answers from the TouchOSC interface on iPad.
 
 ## Background
-These scripts are originally made by Rai Sato, a member of Dr. Sungyoung Kim's lab at RIT.
-Akira Takeuchi modified for EEG measurement.
-
-## Requirement
-Matlab toolboxes (libraries)
+These scripts are originally made by Rai Sato, a member of Dr. Sungyoung Kim's lab at RIT.  
+Akira Takeuchi modified them for EEG measurement and updated audio playback to Audio Toolbox `audiostreamer`.
 
 ## EEG devices
 - DSI-24 (Wearable Sensing)

@@ -35,6 +35,7 @@ dur_pink = 6.5; %pink noise duration
 
 %% audio info acquisition
 
+
 InitializePsychSound %PsychToolBox
 out = PsychPortAudio('GetDevices'); %get sound device information for Psychtool box
 prompt = 'Choose Audio device'; % prompt message
