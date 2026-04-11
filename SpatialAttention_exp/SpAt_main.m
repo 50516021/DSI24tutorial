@@ -205,6 +205,7 @@ fopen(obj.sp); %open trigger port
 
 disp('Connected');
 fwrite(obj.sp,0); WaitSecs(durInterval); %[trigger] initialization
+fwrite(obj.sp,0); pause(durInterval); %[trigger] initialization
 disp('Port opened');
 
 disp('finish trigger preparation. ')
@@ -240,8 +241,9 @@ end
 release(Hr);
 
 % WaitSecs(2)
-fwrite(obj.sp,250); WaitSecs(durTrigger); %[trigger] grand start
-fwrite(obj.sp,0); WaitSecs(durInterval)
+% pause(2)
+fwrite(obj.sp,250); pause(durTrigger); %[trigger] grand start
+fwrite(obj.sp,0); pause(durInterval)
 responce = cell(numTrial,4); %answer responces
 
 
@@ -270,7 +272,7 @@ try
         
         release(Hs);
         
-        WaitSecs(1) %time of baseline
+        pause(1) %time of baseline
         
         % Prepare sound
         restime = tic;
@@ -286,20 +288,20 @@ try
         % Biosemi with Actiview / DSI-24 %
         PsychPortAudio('Start',pahandle);               % playback          
         
-        fwrite(obj.sp,240); WaitSecs(durTrigger); %[trigger] masker onset
+        fwrite(obj.sp,240); pause(durTrigger); %[trigger] masker onset
         fwrite(obj.sp,0);
         
-        WaitSecs(starttimes(i)/fs-durTrigger); %wait for target onset
+        pause(starttimes(i)/fs-durTrigger); %wait for target onset
 
-        fwrite(obj.sp,230); WaitSecs(durTrigger); %[trigger] target onset
+        fwrite(obj.sp,230); pause(durTrigger); %[trigger] target onset
         fwrite(obj.sp,0);
 
-        WaitSecs(targetdur - durTrigger); %wait for stream offset
+        pause(targetdur - durTrigger); %wait for stream offset
        
-        fwrite(obj.sp,220); WaitSecs(durTrigger); %[trigger] stream offset
+        fwrite(obj.sp,220); pause(durTrigger); %[trigger] stream offset
         fwrite(obj.sp,0); 
         
-        WaitSecs(.50); %blank after the target
+        pause(.50); %blank after the target
 %         WaitSecs(.25); %blank between the stream and answer session
         
         % Answer responce %
@@ -336,8 +338,8 @@ try
             end
         end
 
-        fwrite(obj.sp,210); WaitSecs(durTrigger); %[trigger] answer input (responded)
-        fwrite(obj.sp,0); WaitSecs(durInterval);
+        fwrite(obj.sp,210); pause(durTrigger); %[trigger] answer input (responded)
+        fwrite(obj.sp,0); pause(durInterval);
             
         MesAE = sprintf('trial %d/%d Answer time finish \n', i, numTrial);
         disp(MesAE)
@@ -363,16 +365,16 @@ try
         %%% answer info %%%    
         [TgCAns, TgIAns, TgAuth, TgSpt, TgSNR] = AnsConvert(i, res, corTable, targets, Spats, SNRs);
         
-        fwrite(obj.sp,TgCAns); WaitSecs(durTrigger); %[trigger] correct answer
-        fwrite(obj.sp,0); WaitSecs(durInterval); 
-        fwrite(obj.sp,TgIAns); WaitSecs(durTrigger); %[trigger] input answer
-        fwrite(obj.sp,0); WaitSecs(durInterval); 
-        fwrite(obj.sp,TgAuth); WaitSecs(durTrigger); %[trigger] authenticity
-        fwrite(obj.sp,0); WaitSecs(durInterval); 
-        fwrite(obj.sp,TgSpt);  WaitSecs(durTrigger); %[trigger] spatial pattern
-        fwrite(obj.sp,0); WaitSecs(durInterval); 
-        fwrite(obj.sp,TgSNR);  WaitSecs(durTrigger); %[trigger] SNR
-        fwrite(obj.sp,0); WaitSecs(durInterval); 
+        fwrite(obj.sp,TgCAns); pause(durTrigger); %[trigger] correct answer
+        fwrite(obj.sp,0); pause(durInterval); 
+        fwrite(obj.sp,TgIAns); pause(durTrigger); %[trigger] input answer
+        fwrite(obj.sp,0); pause(durInterval); 
+        fwrite(obj.sp,TgAuth); pause(durTrigger); %[trigger] authenticity
+        fwrite(obj.sp,0); pause(durInterval); 
+        fwrite(obj.sp,TgSpt);  pause(durTrigger); %[trigger] spatial pattern
+        fwrite(obj.sp,0); pause(durInterval); 
+        fwrite(obj.sp,TgSNR);  pause(durTrigger); %[trigger] SNR
+        fwrite(obj.sp,0); pause(durInterval); 
 %         WaitSecs(durAdjust); %time adjustment
         Triggers(i,:) = [TgCAns, TgIAns, TgAuth, TgSpt, TgSNR]; % save the amount of triggers
         %%%%%%%%%
@@ -393,7 +395,7 @@ try
             step(Hs, commentSet);
             release(Hs);
             
-            WaitSecs(0.5)
+            pause(0.5)
             
             Hr=dsp.UDPReceiver('LocalIPPort',incoming);
             dR=[];
@@ -415,14 +417,14 @@ try
             step(Hs, commentSet);
             release(Hs)
             
-            WaitSecs(0.5)
+            pause(0.5)
         end
         
-        WaitSecs(1)
+        pause(1)
     end
     
-    fwrite(obj.sp,250); WaitSecs(durTrigger); %[trigger] grand end
-    fwrite(obj.sp,0); WaitSecs(durInterval)
+    fwrite(obj.sp,250); pause(durTrigger); %[trigger] grand end
+    fwrite(obj.sp,0); pause(durInterval)
     
     fclose(obj.sp);
     delete(obj.sp);

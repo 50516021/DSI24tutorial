@@ -2,6 +2,12 @@
 %  SpAt_prac % 
 % - practice version of the CRM test
 %
+% #WARNING (20260410)
+% This practice script uses MATLAB built-in "pause" instead of
+% Psychtoolbox "WaitSecs" for timing (sound offsets, rests, etc.).
+% Timing precision is therefore limited by the OS scheduler and MATLAB,
+% and is NOT guaranteed to match the original PTB-based implementation.
+%
 % #required Add-ons
 % - 
 %
@@ -141,7 +147,7 @@ while outRest == 0
 end
 release(Hr);
 
-% WaitSecs(2)
+% pause(2)
 
 responce = cell(numTrial,4);
 
@@ -168,7 +174,7 @@ responce = cell(numTrial,4);
         
         release(Hs);
         
-        WaitSecs(1)
+        pause(1)
         
         % Prepare sound
         restime = tic;
@@ -180,7 +186,7 @@ responce = cell(numTrial,4);
         
         % Play sound   
         PsychPortAudio('Start',pahandle);               % playback
-        WaitSecs(duration/fs);
+        pause(duration/fs);
 
         % Answer responce %
         % answer responce
@@ -275,10 +281,10 @@ responce = cell(numTrial,4);
             step(Hs, commentSet);
             release(Hs)
             
-            WaitSecs(1)
+            pause(1)
         end
         
-        WaitSecs(1)
+        pause(1)
     end
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
