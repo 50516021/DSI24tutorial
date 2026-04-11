@@ -2,6 +2,12 @@
 %  SpAt_prac % 
 % - practice version of the CRM test
 %
+% #WARNING (20260410)
+% This practice script uses MATLAB built-in "pause" instead of
+% Psychtoolbox "WaitSecs" for timing (baselines, rests, etc.).
+% Timing precision is therefore limited by the OS scheduler and MATLAB,
+% and is NOT guaranteed to match the original PTB-based implementation.
+%
 % #required Add-ons
 % - Audio Toolbox (audiostreamer)
 % 
@@ -22,6 +28,7 @@
 % 20240503 minor changes from Japanese exps
 % v2 - audioStreamer version (no PTB required)
 % 20260330 
+% 20260410 pause-based timing (no WaitSecs)
 
 %% variables
 
@@ -29,7 +36,7 @@
 % ip = '192.168.0.107';
 ip = '169.254.120.172'; %LAB(Sungyoung)'s iPad
 % ip = '169.254.153.246'; %Akira's iPad
-ip = '192.168.0.73';
+ip = '192.168.0.136';
 
 outgoing = 7001; % for dsp.UDPSender -- port(incoming) on iOS app side
 incoming = 7000; % for dsp.UDPReceiver -- port(outgoing) on iOS app side
@@ -146,7 +153,7 @@ while outRest == 0
 end
 release(Hr);
 
-% WaitSecs(2)
+% pause(2)
 
 responce = cell(numTrial,4);
 
@@ -173,11 +180,11 @@ responce = cell(numTrial,4);
         
         release(Hs);
         
-        WaitSecs(1)
+        pause(1)
         
         % Prepare sound
         restime = tic;
-        [stimulus, duration] = data_load.makstimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
+        [stimulus, duration] = data_load.makestimulus(targets(i), fs, Spats(i), starttimes(i), SNRs(i), numSpk);
 
         % Ensure stimulus orientation is [samples x channels]
         if size(stimulus, 2) ~= numSpk && size(stimulus, 1) == numSpk
@@ -280,10 +287,10 @@ responce = cell(numTrial,4);
             step(Hs, commentSet);
             release(Hs)
             
-            WaitSecs(1)
+            pause(1)
         end
         
-        WaitSecs(1)
+        pause(1)
     end
     
     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);

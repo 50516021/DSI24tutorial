@@ -66,7 +66,7 @@ for i=1:numIter
             PsychPortAudio('Volume', pahandle, volume);
             PsychPortAudio('FillBuffer', pahandle, sintone);   % load stimuli stimulus
             PsychPortAudio('Start',pahandle);               % playback
-            WaitSecs(0.1);
+            pause(0.1);
         end
     
         testsound = zeros(numSpk,length(Pnoise));
