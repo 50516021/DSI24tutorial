@@ -48,6 +48,12 @@ Akira Takeuchi modified them for EEG measurement and updated audio playback to A
 ## EEG devices
 - DSI-24 (Wearable Sensing)
 
+## Stimuli
+
+- Speech materials follow a CRM-style corpus (color–number commands such as "Ready BLUE NINE").
+- Target and masker waveforms used in the experiments are stored under `stimuli/target/english/` and `stimuli/masker/`.
+- All spoken stimuli were generated using an AI text‑to‑speech service: https://ondoku3.com/en/
+
 ## Author
 
 **Akira Takeuchi**<br>
