@@ -10,7 +10,7 @@
 % 20260608 flexible number of speaker
 %%%%%%%%%% make sure the particular number is assigned to 'standardAmount'  
 
-function [stimulusTable, numSpk] = makestimuluslist_SNR_EEGv4_prac(sbjname)
+function [stimulusTable, numSpk] = makestimuluslist_behv(sbjname)
 
 %% make dir
 % sbjname = 'test';
@@ -21,9 +21,9 @@ mkdir(sprintf('data/%s',sbjname))
 % spatialpattern = 1
                     % 1...left - right
                     % 2...left - backcenter
-numSP = 2; % number of spatial pattern
+numSP  = 2; % number of loudspeakers
 numSpk = 1; % number of speakers (talkers)
-sn = [-12 -6]; %signal/noise ratio
+sn = [-12 -18]; %signal/noise ratio
 numSNR = size(sn,2); % number of SNR
 numGen = 2; % male:taker0 and female:taker1) (number of gender)
 numCol = 4; %colors: blue, red, white, green
