@@ -9,11 +9,13 @@
 % - 
 
 % v1
+% 20260608 derived from makestimulus.m for behavioral version of the CRM test (SpAt_onlybehav_v1.m) 
 % function script for stimulus
+% 
 
 
 
-function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, numSpk)
+function [stimulus, duration] = makestimulus_behv(target, fs, Spat, starttime, SNR, numSpk)
 
 
 %% function variable
@@ -25,8 +27,8 @@ function [stimulus, duration] = makestimulus(target, fs, Spat, starttime, SNR, n
 
 %%% fixed
     SPch = [ ... % left - left
-            0 1 0; ... % left - right
-            0 0 1];... % left - backcenter
+            1 0; ... % left - right
+            0 1];... % left - backcenter
                   
     tailblank = 0.5 *fs;
     d_fifo = 9.9; %duration of fadein/fadeout
