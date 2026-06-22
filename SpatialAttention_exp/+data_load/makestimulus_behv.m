@@ -92,8 +92,7 @@ function [stimulus, duration] = makestimulus_behv(target, fs, Spat, starttime, S
     wavMsk = utils.fadein(d_fifo,wavMsk,fs);  wavMsk = utils.fadeout(d_fifo,wavMsk,fs);   
     stimulus = zeros(duration, numSpk); % make sure the amount of channels
     
-    stimulus(:,1) = wavTgtfull;
+    stimulus(:,1) = wavMsk * SPch(Spat,1) + wavTgtfull;
     stimulus(:,2) = wavMsk * SPch(Spat,2);
-    stimulus(:,3) = wavMsk * SPch(Spat,3);
     
 end

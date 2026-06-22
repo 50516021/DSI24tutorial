@@ -1,7 +1,7 @@
 
-%  SpAt_onlybehav_v1.m
+%  SpAt_onlybehav_v1_audiotest.m
 % 
-% - behavioral only version of the CRM test
+% - behavioral only version of the CRM test - only audio (no iPad)
 %
 % #WARNING (20260410)
 % This practice script uses MATLAB built-in "pause" instead of
@@ -104,55 +104,55 @@ playerName = playerNames(DevID_indx);
 streamer = audiostreamer('Player', playerName, 'SampleRate', fs);
 setup(streamer, zeros(frameSize, numSpk));
 
-%% OSC preparing - clear all message
-Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentReset = utils.oscwrite(indicator, {''});
-step(Hs, commentReset);
-
-conditionReset = utils.oscwrite(condition, {''});
-step(Hs, conditionReset);
-
-trialReset = utils.oscwrite(trial_indicator, {''});
-step(Hs, trialReset);
-
-totalReset = utils.oscwrite(total_indicator, {''});
-step(Hs, totalReset);
-
-totalReset = utils.oscwrite(first_indicator, {''});
-step(Hs, totalReset);
-
-totalReset = utils.oscwrite(second_indicator, {''});
-step(Hs, totalReset);
-
-ledstatus = {0}; % turn off the LED
-ledOn = utils.oscwrite(led, ledstatus);
-step(Hs, ledOn);
-
-ledOn = utils.oscwrite(led2, ledstatus);
-step(Hs, ledOn);
-
-release(Hs)
+% %% OSC preparing - clear all message
+% Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+% commentReset = utils.oscwrite(indicator, {''});
+% step(Hs, commentReset);
+% 
+% conditionReset = utils.oscwrite(condition, {''});
+% step(Hs, conditionReset);
+% 
+% trialReset = utils.oscwrite(trial_indicator, {''});
+% step(Hs, trialReset);
+% 
+% totalReset = utils.oscwrite(total_indicator, {''});
+% step(Hs, totalReset);
+% 
+% totalReset = utils.oscwrite(first_indicator, {''});
+% step(Hs, totalReset);
+% 
+% totalReset = utils.oscwrite(second_indicator, {''});
+% step(Hs, totalReset);
+% 
+% ledstatus = {0}; % turn off the LED
+% ledOn = utils.oscwrite(led, ledstatus);
+% step(Hs, ledOn);
+% 
+% ledOn = utils.oscwrite(led2, ledstatus);
+% step(Hs, ledOn);
+% 
+% release(Hs)
 
 %% experiment
-Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-commentSet = utils.oscwrite(indicator, {'Press any key to start'});
-step(Hs, commentSet);
-release(Hs)
-
-Hr=dsp.UDPReceiver('LocalIPPort',incoming);
-dR=[];
-
-outRest = 0;
-% execute until coming some message from iPad
-while outRest == 0
-    dR=step(Hr);
-    if isempty(dR)==0
-        [tag, data]=utils.oscread(dR);
-        % disp([tag num2str(data')]);
-        break
-    end
-end
-release(Hr);
+% Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+% commentSet = utils.oscwrite(indicator, {'Press any key to start'});
+% step(Hs, commentSet);
+% release(Hs)
+% 
+% Hr=dsp.UDPReceiver('LocalIPPort',incoming);
+% dR=[];
+% 
+% outRest = 0;
+% % execute until coming some message from iPad
+% while outRest == 0
+%     dR=step(Hr);
+%     if isempty(dR)==0
+%         [tag, data]=utils.oscread(dR);
+%         % disp([tag num2str(data')]);
+%         break
+%     end
+% end
+% release(Hr);
 
 % pause(2)
 
@@ -163,25 +163,25 @@ responce = cell(numTrial,4);
         MesST = sprintf('trial %d begins', i);
         disp(MesST)
 
-        Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        trialnumber = {i};
-        trialSet = utils.oscwrite(trial_indicator, trialnumber);
-        step(Hs, trialSet);
+        % Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        % trialnumber = {i};
+        % trialSet = utils.oscwrite(trial_indicator, trialnumber);
+        % step(Hs, trialSet);
         
-        total = {sprintf('/ %d',numTrial)};
-        totalSet = utils.oscwrite(total_indicator, total);
-        step(Hs, totalSet);
+        % total = {sprintf('/ %d',numTrial)};
+        % totalSet = utils.oscwrite(total_indicator, total);
+        % step(Hs, totalSet);
         
         % indicate current task
-        commentSet = utils.oscwrite(indicator, {'Pay attention to the voice from "Ready"'});
-        step(Hs, commentSet);
-
-        conditionSet = utils.oscwrite(condition, {'Single'});
-        step(Hs, conditionSet);            
-        
-        release(Hs);
-        
-        pause(1)
+        % commentSet = utils.oscwrite(indicator, {'Pay attention to the voice from "Ready"'});
+        % step(Hs, commentSet);
+        % 
+        % conditionSet = utils.oscwrite(condition, {'Single'});
+        % step(Hs, conditionSet);            
+        % 
+        % release(Hs);
+        % 
+        % pause(1)
         
         % Prepare sound
         restime = tic;
@@ -197,107 +197,107 @@ responce = cell(numTrial,4);
 
         % Answer responce %
         % answer responce
-        MesAT = sprintf('trial %d Answer time', i);
-        disp(MesAT)
+        % MesAT = sprintf('trial %d Answer time', i);
+        % disp(MesAT)
 
-        ledstatus = {1}; % turn on the LED
-        Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = utils.oscwrite(led, ledstatus);
-        step(Hs, ledOn);
-        release(Hs);
+        % ledstatus = {1}; % turn on the LED
+        % Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        % ledOn = utils.oscwrite(led, ledstatus);
+        % step(Hs, ledOn);
+        % release(Hs);
         
         % indicator
-        Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        commentSet = utils.oscwrite(indicator, {'Answer "Color" and "Number"'});
-        step(Hs, commentSet);
-        release(Hs);
+        % Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        % commentSet = utils.oscwrite(indicator, {'Answer "Color" and "Number"'});
+        % step(Hs, commentSet);
+        % release(Hs);
         
         stat=true;
         t = timer('TimerFcn','stat=false','StartDelay',10); %answer time: 10 sec
         start(t);
 
         % get responce
-        Hr=dsp.UDPReceiver('LocalIPPort',incoming);
-        dR=[];
-        
+        % Hr=dsp.UDPReceiver('LocalIPPort',incoming);
+        % dR=[];
+        % 
         % execute until coming some message from iPad
-        while (stat==true)
-            dR=step(Hr);
-            if isempty(dR)==0
-                [tag, data]=utils.oscread(dR);
-                %                 disp([tag num2str(data')]);
-                break
-            end
-        end
-
-        MesAE = sprintf('trial %d Answer time ends \n', i);
-        disp(MesAE)
-
-        if stat == false
-            tag = 'NA';
-            commentSet = utils.oscwrite(indicator, {'TIME UP'});
-        else
-            commentSet = utils.oscwrite(indicator, {'Sent'});            
-        end
+        % while (stat==true)
+        %     dR=step(Hr);
+        %     if isempty(dR)==0
+        %         [tag, data]=utils.oscread(dR);
+        %         %                 disp([tag num2str(data')]);
+        %         break
+        %     end
+        % end
+        % 
+        % MesAE = sprintf('trial %d Answer time ends \n', i);
+        % disp(MesAE)
+        % 
+        % if stat == false
+        %     tag = 'NA';
+        %     commentSet = utils.oscwrite(indicator, {'TIME UP'});
+        % else
+        %     commentSet = utils.oscwrite(indicator, {'Sent'});            
+        % end
         
-        step(Hs, commentSet);
-        release(Hs);
-        
-        release(Hr);
-        time = toc(restime);
-        delete(t);
-        res = tag;
-        
-        responce(i,1) = {res};
-        responce(i,3) = {time};
-        
-        ledstatus = {0}; % turn off the LED
-        Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-        ledOn = utils.oscwrite(led, ledstatus);
-        step(Hs, ledOn);
-        release(Hs);
+        % step(Hs, commentSet);
+        % release(Hs);
+        % 
+        % release(Hr);
+        % time = toc(restime);
+        % delete(t);
+        % res = tag;
+        % 
+        % responce(i,1) = {res};
+        % responce(i,3) = {time};
+        % 
+        % ledstatus = {0}; % turn off the LED
+        % Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        % ledOn = utils.oscwrite(led, ledstatus);
+        % step(Hs, ledOn);
+        % release(Hs);
         
         % take a rest
-        if find(i==restposition)
-            disp('taking a break...')
-
-            Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscwrite(indicator, {'Take a rest. Press any key to continue'});
-            step(Hs, commentSet);
-            release(Hs);
-            
-            WaitSecs(1)
-            
-            Hr=dsp.UDPReceiver('LocalIPPort',incoming);
-            dR=[];
-            
-            outRest = 0;
-            % excute until coming some message from iPad
-            while outRest == 0
-                dR=step(Hr);
-                if isempty(dR)==0
-                    [tag, data]=utils.oscread(dR);
-                    % disp([tag num2str(data')]);
-                    break
-                end
-            end
-            release(Hr);
-            
-            Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-            commentSet = utils.oscwrite(indicator, {''});
-            step(Hs, commentSet);
-            release(Hs)
-            
-            pause(1)
-        end
-        
+        % if find(i==restposition)
+        %     disp('taking a break...')
+        % 
+        %     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        %     commentSet = utils.oscwrite(indicator, {'Take a rest. Press any key to continue'});
+        %     step(Hs, commentSet);
+        %     release(Hs);
+        % 
+        %     WaitSecs(1)
+        % 
+        %     Hr=dsp.UDPReceiver('LocalIPPort',incoming);
+        %     dR=[];
+        % 
+        %     outRest = 0;
+        %     % excute until coming some message from iPad
+        %     while outRest == 0
+        %         dR=step(Hr);
+        %         if isempty(dR)==0
+        %             [tag, data]=utils.oscread(dR);
+        %             % disp([tag num2str(data')]);
+        %             break
+        %         end
+        %     end
+        %     release(Hr);
+        % 
+        %     Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+        %     commentSet = utils.oscwrite(indicator, {''});
+        %     step(Hs, commentSet);
+        %     release(Hs)
+        % 
+        %     pause(1)
+        % end
+        % 
         pause(1)
     end
     
-    Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
-    commentSet = utils.oscwrite(indicator, {'Finish'});
-    step(Hs, commentSet);
-    release(Hs)
+    % Hs = dsp.UDPSender('RemoteIPAddress',ip,'RemoteIPPort',outgoing);
+    % commentSet = utils.oscwrite(indicator, {'Finish'});
+    % step(Hs, commentSet);
+    % release(Hs)
 
     % release audio streamer
     if exist('streamer','var')
