@@ -339,3 +339,5 @@ res = movevars(res, 'responce1', 'After','SpatialPosition');
 res = movevars(res, 'responce4', 'After','Answer');
 res = movevars(res, 'responce3', 'After','Answer');
 
+
+save(sprintf('subject/%s/res_%s.mat',filename, filename),'res')
